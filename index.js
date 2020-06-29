@@ -18,11 +18,16 @@ app.use(ejsLayouts)
 app.use(require('morgan')('dev'))
 app.use(helmet())
 
+// include auth controller
+app.use('/auth', require('./controllers/auth'))
+
 // ROUTES
 app.get('/', function(req, res) {
     res.render('index')
 })
 
+
+// initializes app on port
 app.listen(process.env.PORT || 3000, function() {
     console.log(`🌻🌻🌻🌻 hittin on ${process.env.PORT}`)
 })
