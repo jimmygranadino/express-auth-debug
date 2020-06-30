@@ -47,13 +47,14 @@ router.get('/login', function(req, res) {
 })
 
 // POST route for login
-router.post('/login', function(req, res) {
+router.post('/login', function(req, res, next) {
     passport.authenticate('local', function(error, user, info) {
         //if no user authenticated
         if(!user) {
             req.flash('error', 'Invalid username or password')
-            // save to our user session no username
-            // redirect our user to try logging in again
+            req.session.save(function() {
+                return res.redirect('/auth/login')
+            })
         }
         if (error) {
             return error
@@ -61,8 +62,13 @@ router.post('/login', function(req, res) {
 
         req.login(function(user, error) {
             // if error move to error
+            if(error) next(error)
             // if success flash success message
+            req.flash('success', 'you been validated and logged in fam')
             // if success save session and redirect user
+            req.session.save(function() {
+                return res.redirect('/')
+            })
         })
     })
 })
