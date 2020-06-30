@@ -28,6 +28,10 @@ router.post('/register', function(req, res) {
         // if user was created
         if(created) {
             console.log(`🐳 user created 🐳`)
+            passport.authenticate('local', {
+                successRedirect: '/',
+                successFlash: 'Thanks fam for registering'
+            })(req, res)
             res.redirect('/')
         } else {
             console.log(`💥 user email already exists 💥`)
@@ -70,7 +74,7 @@ router.post('/login', function(req, res, next) {
                 return res.redirect('/')
             })
         })
-    })
+    })(req, res, next)
 })
 
 router.post('/login', passport.authenticate('local', {
@@ -80,5 +84,10 @@ router.post('/login', passport.authenticate('local', {
     failureFlash: 'Invalid username or password'
 }))
 
+
+router.get('/logout', function(req, res) {
+    req.logout()
+    res.redirect('/')
+})
 // export router
 module.exports = router
