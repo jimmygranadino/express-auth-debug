@@ -9,6 +9,7 @@ const db = require('../models')
 
 // import middleware
 const flash = require('flash')
+const passport //update to config file path when available
 
 // GET route for register
 router.get('/register', function(req, res) {
@@ -44,7 +45,34 @@ router.post('/register', function(req, res) {
 router.get('/login', function(req, res) {
     res.render('auth/login')
 })
+
 // POST route for login
+router.post('/login', function(req, res) {
+    passport.authenticate('local', function(error, user, info) {
+        //if no user authenticated
+        if(!user) {
+            req.flash('error', 'Invalid username or password')
+            // save to our user session no username
+            // redirect our user to try logging in again
+        }
+        if (error) {
+            return error
+        }
+
+        req.login(function(user, error) {
+            // if error move to error
+            // if success flash success message
+            // if success save session and redirect user
+        })
+    })
+})
+
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/auth/login',
+    successFlash: 'Welcome to our app!',
+    failureFlash: 'Invalid username or password'
+}))
 
 // export router
 module.exports = router
