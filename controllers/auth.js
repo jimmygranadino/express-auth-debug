@@ -9,7 +9,7 @@ const db = require('../models')
 
 // import middleware
 const flash = require('flash')
-const passport //update to config file path when available
+const passport = require('../config/ppConfig')
 
 // GET route for register
 router.get('/register', function(req, res) {

@@ -28,8 +28,7 @@ passport.use(new LocalStrategy({
             callback(null, user)
         }
     }).catch(callback)
-}
-))
+}))
 
 // password local config
 
