@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models');
 // import middleware
-const flash = require('flash');
+const flash = require('connect-flash');
 const passport = require("../config/ppConfig");
 
 // register get route
@@ -50,9 +50,8 @@ router.post('/login', function(req, res, next) {
         // if no user authenticated
         if (!user) {
             req.flash('error', 'Invalid username or password');
-            req.session.save(function() {
-                return res.redirect('/auth/login');
-            });
+            console.log("💩butts")
+            return res.redirect('/auth/login');
         }
         if (error) {
             return next(error);
@@ -60,24 +59,16 @@ router.post('/login', function(req, res, next) {
 
         req.login(user, function(error) {
             // if error move to error
-            console.log("❌❌❌")
             if (error) next(error);
             // if success flash success message
             req.flash('success', 'You are validated and logged in.');
             // if success save session and redirect user
             req.session.save(function() {
-                return res.redirect('/');
+                return res.redirect('/profile');
             });
         })
-    })(req, res);
-})
-
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/auth/login',
-    successFlash: 'Welcome to our app!',
-    failureFlash: 'Invalid username or password.'
-}));
+    })(req, res, next);
+});
 
 router.get('/logout', function(req, res) {
     req.logout();
